@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vuelos desde Bilbao — Skill para Claude Code</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0d1117;
+      color: #e6edf3;
+      line-height: 1.6;
+    }
+
+    a { color: #58a6ff; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* HERO */
+    .hero {
+      text-align: center;
+      padding: 80px 24px 60px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 13px;
+      color: #8b949e;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, #58a6ff, #a371f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1.15rem;
+      color: #8b949e;
+      max-width: 560px;
+      margin: 0 auto 36px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.85; text-decoration: none; }
+
+    .btn-primary {
+      background: #238636;
+      color: #fff;
+      border: 1px solid #2ea043;
+    }
+
+    .btn-secondary {
+      background: #161b22;
+      color: #e6edf3;
+      border: 1px solid #30363d;
+    }
+
+    /* DEMO */
+    .demo {
+      max-width: 720px;
+      margin: 0 auto 64px;
+      padding: 0 24px;
+    }
+
+    .terminal {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .terminal-bar {
+      background: #21262d;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid #30363d;
+    }
+
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-red { background: #ff5f56; }
+    .dot-yellow { background: #ffbd2e; }
+    .dot-green { background: #27c93f; }
+
+    .terminal-label {
+      font-size: 12px;
+      color: #8b949e;
+      margin-left: 4px;
+    }
+
+    .terminal-body {
+      padding: 20px 24px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 13.5px;
+      line-height: 1.8;
+    }
+
+    .t-user { color: #58a6ff; }
+    .t-claude { color: #e6edf3; }
+    .t-dim { color: #8b949e; }
+    .t-green { color: #3fb950; }
+    .t-yellow { color: #d29922; }
+    .t-red { color: #f85149; }
+    .t-purple { color: #a371f7; }
+
+    /* FEATURES */
+    .features {
+      max-width: 960px;
+      margin: 0 auto 64px;
+      padding: 0 24px;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 36px;
+      color: #e6edf3;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .card-icon {
+      font-size: 1.8rem;
+      margin-bottom: 12px;
+    }
+
+    .card h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #e6edf3;
+    }
+
+    .card p {
+      font-size: 14px;
+      color: #8b949e;
+      line-height: 1.6;
+    }
+
+    /* STEPS */
+    .steps {
+      max-width: 680px;
+      margin: 0 auto 64px;
+      padding: 0 24px;
+    }
+
+    .step {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .step-num {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      background: #1f6feb;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .step-content h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .step-content p {
+      font-size: 14px;
+      color: #8b949e;
+    }
+
+    .code {
+      display: inline-block;
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-family: 'SF Mono', monospace;
+      font-size: 13px;
+      color: #a371f7;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 40px 24px;
+      border-top: 1px solid #21262d;
+      color: #8b949e;
+      font-size: 14px;
+    }
+
+    footer span { color: #58a6ff; }
+
+    /* DIVIDER */
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: #21262d;
+      max-width: 960px;
+      margin: 0 auto 64px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="badge">✈ Skill para Claude Code</div>
+    <h1>Vuela desde Bilbao<br><span>sin pagar de más</span></h1>
+    <p>Encuentra la ruta más barata a cualquier destino del mundo desde el aeropuerto de Bilbao, incluyendo vuelos con escala. Con historial de precios y gráficos para saber si está barato o caro.</p>
+    <div class="btn-group">
+      <a class="btn btn-primary" href="https://github.com/TU-USUARIO/kit-vuelos-bilbao/archive/refs/heads/main.zip">
+        ⬇ Descargar kit
+      </a>
+      <a class="btn btn-secondary" href="https://github.com/TU-USUARIO/kit-vuelos-bilbao" target="_blank">
+        Ver en GitHub
+      </a>
+    </div>
+  </section>
+
+  <!-- DEMO TERMINAL -->
+  <div class="demo">
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="dot dot-red"></div>
+        <div class="dot dot-yellow"></div>
+        <div class="dot dot-green"></div>
+        <span class="terminal-label">Claude Code</span>
+      </div>
+      <div class="terminal-body">
+        <div class="t-user">› ¿Cuánto cuesta volar a Tokio en julio desde Bilbao?</div>
+        <br>
+        <div class="t-dim">Clasificando destino... Tipo C (larga distancia)</div>
+        <div class="t-dim">Buscando rutas vía MAD, CDG, AMS, FRA...</div>
+        <br>
+        <div class="t-claude">✈ BILBAO → TOKIO (TYO) | Consulta: 24 abril 2026</div>
+        <div class="t-claude">══════════════════════════════════════</div>
+        <br>
+        <div class="t-green">🥇 OPCIÓN MÁS BARATA</div>
+        <div class="t-claude">Ruta: BIO → AMS → NRT</div>
+        <div class="t-claude">Precio: ~410€/persona | 16h 20min</div>
+        <div class="t-claude">Aerolíneas: Vueling + KLM</div>
+        <br>
+        <div class="t-yellow">🥈 SEGUNDA OPCIÓN</div>
+        <div class="t-claude">Ruta: BIO → MAD → NRT | ~490€ | 18h</div>
+        <br>
+        <div class="t-dim">──────────────────────────────────────</div>
+        <div class="t-purple">⚠ CONTEXTO: Desde Madrid costaría ~520€ en directo.</div>
+        <div class="t-green">Desde Bilbao sale 110€ más barato en esta ruta.</div>
+        <br>
+        <div class="t-green">🟢 PRECIO ACTUAL: 18% por debajo de la media histórica</div>
+        <div class="t-green">   Buen momento para comprar.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- FEATURES -->
+  <section class="features">
+    <h2 class="section-title">Qué hace esta skill</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="card-icon">🔍</div>
+        <h3>Rutas inteligentes</h3>
+        <p>Busca por capas: directo desde BIO, vía Madrid o Barcelona, y vía hubs europeos (París, Ámsterdam, Londres, Frankfurt, Lisboa).</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🌍</div>
+        <h3>Destinos lejanos incluidos</h3>
+        <p>Para América, Asia, África u Oceanía, encuentra la combinación más barata de vuelo corto + vuelo de largo radio.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📊</div>
+        <h3>Gráfico de evolución</h3>
+        <p>Cada consulta guarda el precio. Con el tiempo genera un gráfico para ver si el precio está por encima o por debajo de lo habitual.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🟢</div>
+        <h3>Veredicto claro</h3>
+        <p>Verde si está barato, amarillo si está en rango normal, rojo si está caro. Sin ambigüedades.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚠️</div>
+        <h3>Contexto ciudad pequeña</h3>
+        <p>Compara siempre el precio desde Bilbao con lo que costaría desde Madrid, para saber si vale la pena ir a un aeropuerto más grande.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔥</div>
+        <h3>Chollos de la semana</h3>
+        <p>Sin destino fijo, muestra los vuelos más baratos disponibles ahora mismo desde Bilbao.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- STEPS -->
+  <section class="steps">
+    <h2 class="section-title">Cómo instalarlo</h2>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h3>Instala Claude Code</h3>
+        <p>Abre VS Code, ve a Extensions y busca <span class="code">Claude Code</span>. Necesitas una cuenta de Anthropic.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h3>Descarga este kit</h3>
+        <p>Haz clic en "Descargar kit" arriba, descomprime la carpeta y ábrela en VS Code con <span class="code">Archivo → Abrir carpeta</span>.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h3>Escribe tu destino</h3>
+        <p>Abre el panel de Claude Code y escribe algo como <span class="code">¿vuelos baratos a Bangkok en agosto?</span> La skill se activa automáticamente.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h3>Consulta varias veces</h3>
+        <p>Cada consulta queda guardada en tu historial local. Cuanto más la uses, más preciso se vuelve el análisis de si el precio está barato o caro.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>Hecho con <span>Claude Code</span> · Los precios se obtienen en tiempo real · El historial se guarda solo en tu ordenador</p>
+  </footer>
+
+</body>
+</html>
